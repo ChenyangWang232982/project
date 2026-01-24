@@ -4,11 +4,6 @@ const { sequelize } = require('../config/db');
 
 //Note model
 const Note = sequelize.define('Note', { //type name
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
     title: {
         type: DataTypes.STRING(100),
         allowNull: false
@@ -21,18 +16,18 @@ const Note = sequelize.define('Note', { //type name
         type: DataTypes.STRING(50),
         defaultValue:'default'
     },
-    createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        onUpdate: DataTypes.NOW
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+
     }
 }, {
     tableName: 'notes',
     timestamps: true
 });
+
+
 
 module.exports = Note;

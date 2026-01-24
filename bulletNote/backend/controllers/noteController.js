@@ -1,10 +1,19 @@
-const Note = require('../models/Note');
-
+const {Note, User} = require('../models');
+const { protect } = require('../middleware/auth.middleware');
 //get notes
 exports.getNotes = async (req, res) => {
     try {
+        const userId = req.user.id;
         const notes = await Note.findAll({
-            order: [['createdAt', 'DESC']]
+            where: {userId},
+            order: [['createdAt', 'DESC']],
+            include: [
+                {
+                    model: User,
+                    as: 'author',
+                    attributes: ['id', 'username', 'email']
+                }
+            ] 
         });
         res.status(200).json(notes);
     } catch (err) {
@@ -15,6 +24,7 @@ exports.getNotes = async (req, res) => {
 
 //create notes
 exports.createNote = async (req, res) => {
+    const userId = req.user.id;
     const {title, content, category} = req.body;
 
     //validation
@@ -23,9 +33,17 @@ exports.createNote = async (req, res) => {
     }
     try {
         const newNote = await Note.create({
+            serId,
             title,
             content,
-            category: category || 'default'
+            category: category || 'default',
+            include: [
+                {
+                    model: User,
+                    as: 'author',
+                    attributes: ['id', 'username', 'email']
+                }
+            ] 
         });
         res.status(201).json(newNote);
     } catch (err) {
@@ -36,12 +54,18 @@ exports.createNote = async (req, res) => {
 
 //update notes
 exports.updateNote = async (req,res) => {
+    const userId = req.user.id;
     const {id} = req.params;
     const {title, content, category} = req.body;
 
     try {
         //Check if the note exists
-        const note = await Note.findByPk(id);
+        const note = await Note.findOne({
+            where: {
+                id,
+                userId
+            }
+        });
         if (!note) {
             return res.status(404).json({message: 'Note does not exist'})
         }
@@ -62,9 +86,15 @@ exports.updateNote = async (req,res) => {
 
 exports.deleteNote = async (req, res) => {
     const { id } = req.params;
+    const userId = req.user.id;
 
     try {
-        const note = await Note.findByPk(id);
+         const note = await Note.findOne({
+            where: {
+                id,
+                userId
+            }
+        });
         if(!note) {
             return res.status(404).json({message: 'Note does not exist'});
         }
@@ -78,8 +108,15 @@ exports.deleteNote = async (req, res) => {
 
 exports.getNoteById = async (req, res) => {
     const { id } = req.params;
+    const userId = req.user.id;
+
     try {
-        const note = await Note.findByPk(id);
+        const note = await Note.findOne({
+            where: {
+                id,
+                userId
+            }
+        });
         if(!note) {
             return res.status(404).json({message: 'Note does not exist'});
         }

@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { protect } = require('../middleware/auth.middleware');
+
 const {
   getNotes,
   createNote,
@@ -8,7 +10,7 @@ const {
   getNoteById
 } = require('../controllers/noteController');
 
-
+router.use(protect);
 router.get('/', getNotes);
 router.get('/:id', getNoteById); 
 router.post('/', createNote); 
