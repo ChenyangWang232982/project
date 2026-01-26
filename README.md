@@ -41,6 +41,12 @@ Backend: JS, express, RESTful API
 
    `$env:NODE_ENV="development" npx sequelize-cli db:seed:all` 
 
+   > [!NOTE]
+   >
+   > **username**: admin	**password**: admin	**email**: admin@gmail.com
+   >
+   > **username**: root	    **password**: root	    **email**: root@gmail.com
+
    Activate 
 
    `npm run dev`
