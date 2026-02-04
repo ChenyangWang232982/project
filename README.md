@@ -9,7 +9,7 @@ Since this project was solely intended for full-stack learning purposes, I did n
 3. Add dynamic param (useless for this project)
 4. Search function --- 28.1.2026
 5. Simple aspect function(To avoid try ... catch all the time) --- 29.1.2026
-6. Add api document: http://localhost:5000/api-docs/
+6. Add api document: http://localhost:5000/api-docs/ --- 4.2.2026
 
 ### Todo List
 
