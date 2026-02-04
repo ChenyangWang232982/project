@@ -22,6 +22,14 @@ const Note = sequelize.define('Note', { //type name
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
 
+    },
+    deadLine: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
+    startTime: {
+        type: DataTypes.DATE,
+        allowNull: true,
     }
 }, {
     tableName: 'notes',

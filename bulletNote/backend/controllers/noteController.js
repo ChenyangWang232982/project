@@ -25,7 +25,7 @@ const getNotes = async (req, res) => {
 const createNote = async (req, res) => {
     console.log('creating note')
     const userId = req.user.id;
-    const {title, content, category} = req.body;
+    const {title, content, category, deadLine, startTime} = req.body;
 
     if (!title || !content) {
         return res.status(400).json({
@@ -37,6 +37,8 @@ const createNote = async (req, res) => {
         title,
         content,
         category: category || 'default',
+        deadLine: deadLine,
+        startTime: startTime
     });
     res.status(201).json({
         success: true,
@@ -47,7 +49,7 @@ const createNote = async (req, res) => {
 const updateNote = async (req,res) => {
     const userId = req.user.id;
     const {id} = req.params;
-    const {title, content, category} = req.body;
+    const {title, content, category, deadLine, startTime} = req.body;
 
     const note = await Note.findOne({
         where: {
@@ -64,7 +66,9 @@ const updateNote = async (req,res) => {
     await note.update({
         title: title || note.title,
         content: content || note.content,
-        category: category || note.category
+        category: category || note.category,
+        deadLine: deadLine || note.deadLine,
+        startTime: startTime || note.startTime
     });
 
     res.status(200).json({
