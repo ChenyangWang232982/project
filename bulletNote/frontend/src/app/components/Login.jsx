@@ -103,7 +103,7 @@ const Login = () => {
         usernameOrEmail: registerForm.username,
         password: registerForm.password
       });
-      navigate(`/notes/${res.data.data.username}`, { replace: true });
+      navigate(`/notes/${res.data.username}`, { replace: true });
     } catch (err) {
       setErrorMsg(err.response?.data?.message || 'Failure to register');
     } finally {
