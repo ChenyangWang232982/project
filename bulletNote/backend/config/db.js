@@ -1,6 +1,8 @@
 const { Sequelize } = require('sequelize');  //ORM tool
 require('dotenv').config();
 const config = require('./config');
+const fs = require('fs');
+const path = require('path');
 
 const env = process.env.NODE_ENV || 'development';
 const dbConfig = config[env]
