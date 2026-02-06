@@ -19,7 +19,7 @@ registration = async (req, res) => {
             [Op.or]: [{username: username}, {email: email}]
         }
     });
-    if (existingUser || existingEmail) {
+    if (existingUser) {
         console.log("existing user");
         return res.status(400).json({
             success: false,
