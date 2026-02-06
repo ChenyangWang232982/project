@@ -1,5 +1,4 @@
 import axios from 'axios';
-require('dotenv').config();
 const url = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const api = axios.create({
     baseURL: url,
@@ -24,7 +23,7 @@ api.interceptors.response.use(
         return response.data; 
     },
     (error) => {
-        if (err.name === 'AbortError') {
+        if (error.name === 'AbortError') {
             return Promise.reject(error);
         }
         const needSkipAlert = error.config?.headers?.['X-Skip-Alert'] === true 
