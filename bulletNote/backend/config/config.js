@@ -8,7 +8,16 @@ module.exports = {
     host: process.env.MYSQL_HOST || '127.0.0.1',
     dialect: process.env.DB_DIALECT || 'mysql',
     port: process.env.MYSQL_PORT || 3306,
-
+    ssl: process.env.DB_SSL === 'true'
   },
+  production: {
+    username: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DB_NAME,
+    host: process.env.MYSQL_HOST || '127.0.0.1',
+    dialect: process.env.DB_DIALECT || 'mysql',
+    port: process.env.MYSQL_PORT || 3306,
+    ssl: true
+  }
 
 };
