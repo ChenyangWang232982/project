@@ -24,7 +24,7 @@ const Login = () => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const resData = await api.get('/users/Info', {
+        const resData = await api.get('/users/info', {
           headers: { 'X-Skip-Alert': 'true' }
         });
         
@@ -73,8 +73,7 @@ const Login = () => {
     
     try {
       const res = await api.post('/users/login', formData);
-      const info = await api.get('/users/info');
-      navigate(`/notes/${info.data.username}`);
+      navigate(`/notes/${res.data.username}`);
     } catch (err) {
       setErrorMsg(
         err.response?.data?.message || 'Failure to login'
@@ -104,7 +103,7 @@ const Login = () => {
         usernameOrEmail: registerForm.username,
         password: registerForm.password
       });
-      navigate('/notes');
+      navigate(`/notes/${res.data.data.username}`, { replace: true });
     } catch (err) {
       setErrorMsg(err.response?.data?.message || 'Failure to register');
     } finally {

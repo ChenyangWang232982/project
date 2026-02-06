@@ -30,7 +30,7 @@ const NoteList = () => {
       setLoading(true);
       setErrorMsg('');
       
-      const userRes = await api.get('/users/Info');
+      const userRes = await api.get('/users/info');
       const userData = userRes?.success ? userRes.data : null;
       setUserInfo(userData);
       

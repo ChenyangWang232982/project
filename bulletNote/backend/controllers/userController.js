@@ -2,7 +2,7 @@ const User = require('../models/User');
 const { JWT_EXPIRES_IN, Op } = require('../models/User');
 const { createAspect } = require('../utils/aspect');
 
-
+const isProd = process.env.NODE_ENV === 'production';
 //registration
 registration = async (req, res) => {
     const {username, password, email} = req.body || {};
@@ -88,8 +88,8 @@ login = async (req, res) => {
         {
             httpOnly: true,
             maxAge: JWT_EXPIRES_IN * 1000,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none',
+            secure: isProd,
+            sameSite: isProd ? 'none' : 'lax',
             path: '/'
         }
     );
@@ -117,7 +117,8 @@ getUserInfo = async (req, res) => {
 logout = async (req,res) => {
     res.clearCookie('note_token', {
         httpOnly: true,
-        sameSite: 'strict',
+        sameSite: isProd ? 'none' : 'lax',
+        secure: isProd,
         path: '/'
     })
      res.status(200).json({

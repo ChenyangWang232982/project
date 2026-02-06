@@ -20,7 +20,7 @@ const swaggerDocument = require('./swagger_output.json');
 const swaggerUi = require('swagger-ui-express');
 
 
-if (process.env.NODE_ENV !== "development ") {
+if (process.env.NODE_ENV !== "development") {
   console.log = () => {};          
   console.debug = () => {};        
 }
@@ -32,10 +32,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 app.use(cookieParser());
 
-
 // middlewear
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: true,
   credentials: true, //Allowed to cross origin with cookie
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'X-Skip-Alert']
@@ -138,8 +137,17 @@ module.exports = {
     host: process.env.MYSQL_HOST || '127.0.0.1',
     dialect: process.env.DB_DIALECT || 'mysql',
     port: process.env.MYSQL_PORT || 3306,
-
+    ssl: process.env.DB_SSL === 'true'
   },
+  production: {
+    username: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DB_NAME,
+    host: process.env.MYSQL_HOST || '127.0.0.1',
+    dialect: process.env.DB_DIALECT || 'mysql',
+    port: process.env.MYSQL_PORT || 3306,
+    ssl: true
+  }
 
 };
 ====================================================================================================
@@ -149,22 +157,34 @@ module.exports = {
 Content:
 const { Sequelize } = require('sequelize');  //ORM tool
 require('dotenv').config();
+const config = require('./config');
+const fs = require('fs');
+const path = require('path');
 
+const env = process.env.NODE_ENV || 'development';
+const dbConfig = config[env]
 const sequelize = new Sequelize(
-    process.env.MYSQL_DB_NAME,
-    process.env.MYSQL_USER,
-    process.env.MYSQL_PASSWORD,
+    dbConfig.database,
+    dbConfig.username,
+    dbConfig.password,
     {
-        host: process.env.MYSQL_HOST,
-        dialect: 'mysql',
-        port: process.env.MYSQL_PORT || 3306,
+        host: dbConfig.host,
+        dialect: dbConfig.dialect,
+        port: dbConfig.port,
         logging: false, // closed sql log
         pool: {
             max: 5,
             min: 0,
             acquire: 30000,
             idle: 10000
-        }
+        },
+        ssl: dbConfig.ssl,
+        dialectOptions: dbConfig.ssl ? {
+            ssl: {
+                rejectUnauthorized: true,
+                ca: fs.readFileSync(path.resolve(__dirname, 'ca.pem'))
+            }
+    } : {}
     }
 );
 
@@ -339,7 +359,7 @@ registration = async (req, res) => {
             [Op.or]: [{username: username}, {email: email}]
         }
     });
-    if (existingUser || existingEmail) {
+    if (existingUser) {
         console.log("existing user");
         return res.status(400).json({
             success: false,
@@ -409,7 +429,7 @@ login = async (req, res) => {
             httpOnly: true,
             maxAge: JWT_EXPIRES_IN * 1000,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'none',
             path: '/'
         }
     );
