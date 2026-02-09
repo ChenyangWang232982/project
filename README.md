@@ -34,7 +34,9 @@ Since this project was solely intended for full-stack learning purposes, I did n
 
 ### Bug
 
-1. Backend seems that can not take cookie from mobile browser.
+1. Backend seems that can not take cookie from mobile browser. --- 7.2.2026 (medium)
+2. Can not show all texts if the text is so long. --- 9.2.2026 (easy)
+3. The cookie would be deleted automatically because of some reason. --- 9.2.2026 (hard)
 
 ### Prerequisites
 
